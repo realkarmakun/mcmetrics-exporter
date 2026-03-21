@@ -15,30 +15,12 @@
  *     along with UnifiedMetrics.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-plugins {
-    java
-}
+package dev.cubxity.plugins.metrics.velocity.metric.server
 
-group = "dev.cubxity.plugins.metrics"
-version = "0.0.1-SNAPSHOT"
+import dev.cubxity.plugins.metrics.api.metric.collector.CollectorCollection
+import dev.cubxity.plugins.metrics.api.metric.collector.Collector
+import dev.cubxity.plugins.metrics.velocity.bootstrap.McmetricsExporterVelocityBootstrap
 
-repositories {
-    mavenCentral()
-    maven("https://repo.papermc.io/repository/maven-public/")
-}
-
-dependencies {
-    compileOnly("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
-    compileOnly("io.github.rkkm.mcmetrics-exporter", "mcmetrics-exporter-api", "0.3.3")
-}
-
-tasks {
-    processResources {
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
-
-        from("src/main/resources") {
-            expand("version" to version)
-            include("plugin.yml")
-        }
-    }
+class ServerCollection(bootstrap: McmetricsExporterVelocityBootstrap) : CollectorCollection {
+    override val collectors: List<Collector> = listOf(ServerCollector(bootstrap))
 }

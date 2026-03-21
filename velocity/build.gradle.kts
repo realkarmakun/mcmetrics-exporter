@@ -15,30 +15,44 @@
  *     along with UnifiedMetrics.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/*
+ *   Originally part of UnifiedMetrics.
+ *   Forked and modified by MeProject (2026) for mcmetrics-exporter.
+ *   Licensed under LGPL v3 or later.
+ */
+
 plugins {
-    java
+    alias(libs.plugins.shadow)
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.kapt)
 }
 
-group = "dev.cubxity.plugins.metrics"
-version = "0.0.1-SNAPSHOT"
-
 repositories {
-    mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
 }
 
 dependencies {
-    compileOnly("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
-    compileOnly("io.github.rkkm.mcmetrics-exporter", "mcmetrics-exporter-api", "0.3.3")
+    api(project(":mcmetrics-exporter-common"))
+
+    compileOnly("com.velocitypowered:velocity-api:3.5.0-SNAPSHOT")
+    kapt("com.velocitypowered:velocity-api:3.5.0-SNAPSHOT")
 }
 
 tasks {
+    shadowJar {
+        archiveClassifier.set("")
+        relocate("com.charleskorn", "dev.cubxity.plugins.metrics.libs.com.charleskorn")
+        relocate("io.prometheus", "dev.cubxity.plugins.metrics.libs.io.prometheus")
+    }
     processResources {
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
-
-        from("src/main/resources") {
-            expand("version" to version)
-            include("plugin.yml")
+        filesMatching("velocity-plugin.yml") {
+            expand(
+                "version" to project.version
+            )
         }
     }
+}
+
+kotlin {
+    jvmToolchain(21)
 }

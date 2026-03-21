@@ -21,24 +21,20 @@
  *   Licensed under LGPL v3 or later.
  */
 
-package dev.cubxity.plugins.metrics.api.metric
+package dev.cubxity.plugins.metrics.velocity.metric.server
 
-import dev.cubxity.plugins.metrics.api.metric.collector.CollectorCollection
+import dev.cubxity.plugins.metrics.api.metric.collector.Collector
+import dev.cubxity.plugins.metrics.api.metric.data.GaugeMetric
 import dev.cubxity.plugins.metrics.api.metric.data.Metric
+import dev.cubxity.plugins.metrics.velocity.bootstrap.McmetricsExporterVelocityBootstrap
 
-interface MetricsManager {
-    val collections: List<CollectorCollection>
-
-    fun initialize()
-
-    fun registerCollection(collection: CollectorCollection)
-
-    fun unregisterCollection(collection: CollectorCollection)
-
-    /**
-     * This should be called asynchronously
-     */
-    suspend fun collect(): List<Metric>
-
-    fun dispose()
+class ServerCollector(private val bootstrap: McmetricsExporterVelocityBootstrap) : Collector {
+    override fun collect(): List<Metric> {
+        val server = bootstrap.server
+        return listOf(
+            GaugeMetric("minecraft_plugins", value = server.pluginManager.plugins.size),
+            GaugeMetric("minecraft_players_count", value = server.playerCount),
+            GaugeMetric("minecraft_players_max", value = server.configuration.showMaxPlayers)
+        )
+    }
 }

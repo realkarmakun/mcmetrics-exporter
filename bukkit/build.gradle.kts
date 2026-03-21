@@ -16,29 +16,42 @@
  */
 
 plugins {
-    java
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.shadow)
 }
 
-group = "dev.cubxity.plugins.metrics"
-version = "0.0.1-SNAPSHOT"
-
 repositories {
-    mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
 }
 
 dependencies {
+    api(project(":mcmetrics-exporter-common"))
     compileOnly("com.destroystokyo.paper", "paper-api", "1.16.5-R0.1-SNAPSHOT")
-    compileOnly("io.github.rkkm.mcmetrics-exporter", "mcmetrics-exporter-api", "0.3.3")
 }
 
 tasks {
-    processResources {
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    shadowJar {
+        archiveClassifier.set("")
+        relocate("com.charleskorn", "dev.cubxity.plugins.metrics.libs.com.charleskorn")
+        relocate("io.prometheus", "dev.cubxity.plugins.metrics.libs.io.prometheus")
 
-        from("src/main/resources") {
-            expand("version" to version)
-            include("plugin.yml")
+        manifest {
+            attributes(mapOf("paperweight-mappings-namespace" to "mojang"))
         }
     }
+    processResources {
+        filesMatching("plugin.yml") {
+            expand(
+                "version" to project.version
+            )
+        }
+    }
+}
+
+kotlin {
+    jvmToolchain(11)
+}
+
+java {
+    targetCompatibility = JavaVersion.VERSION_11
 }

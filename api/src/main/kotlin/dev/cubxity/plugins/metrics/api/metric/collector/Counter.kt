@@ -15,39 +15,73 @@
  *     along with UnifiedMetrics.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/*
+ *   Originally part of UnifiedMetrics.
+ *   Forked and modified by MeProject (2026) for mcmetrics-exporter.
+ *   Licensed under LGPL v3 or later.
+ */
+
 package dev.cubxity.plugins.metrics.api.metric.collector
 
 import dev.cubxity.plugins.metrics.api.metric.data.CounterMetric
 import dev.cubxity.plugins.metrics.api.metric.data.Labels
 import dev.cubxity.plugins.metrics.api.metric.data.Metric
 import dev.cubxity.plugins.metrics.api.metric.store.DoubleAdderStore
+import dev.cubxity.plugins.metrics.api.metric.store.DoubleStore
 import dev.cubxity.plugins.metrics.api.metric.store.DoubleStoreFactory
+import java.util.concurrent.ConcurrentHashMap
 
 /**
- * @param name name of the sample. Should end with '_total'
+ * A [Collector] that tracks a counter broken down by zero or more labels whose
+ * **keys** (and fallback defaults) are fixed at construction time but whose
+ * **values** are supplied at increment time via [LabelDef.invoke].
+ *
+ * A child store is created lazily the first time a particular combination of
+ * label values is observed. When no [labelDefs] are provided the counter
+ * behaves as a plain single-value counter.
+ *
+ * Example:
+ * ```
+ * val hostname = LabelDef("hostname")
+ *
+ * val logins = Counter("minecraft_events_login_total", hostname)
+ *
+ * // at event time — null-safe, falls back to LabelDef.default automatically
+ * logins.inc(hostname(connection.virtualHost.getOrNull()?.hostString))
+ * ```
+ *
+ * Plain usage (no labels):
+ * ```
+ * val logins = Counter("minecraft_events_login_total")
+ * logins.inc()
+ * ```
+ *
+ * @param name              metric name, should end with `_total`
+ * @param labelDefs         zero or more label definitions (key + default value)
+ * @param valueStoreFactory factory used when creating each label set's store
  */
 class Counter(
     private val name: String,
-    private val labels: Labels = emptyMap(),
-    valueStoreFactory: DoubleStoreFactory = DoubleAdderStore
+    private vararg val labelDefs: LabelDef,
+    private val valueStoreFactory: DoubleStoreFactory = DoubleAdderStore
 ) : Collector {
-    private val count = valueStoreFactory.create()
 
-    override fun collect(): List<Metric> {
-        return listOf(
-            CounterMetric(name, labels, count.get())
-        )
-    }
+    private val stores = ConcurrentHashMap<Labels, DoubleStore>()
 
-    operator fun inc(): Counter = apply {
-        count.add(1.0)
-    }
+    override fun collect(): List<Metric> =
+        stores.entries.map { (labels, store) -> CounterMetric(name, labels, store.get()) }
 
-    operator fun plusAssign(delta: Double) {
-        count.add(delta)
-    }
-
-    operator fun plusAssign(delta: Number) {
-        count.add(delta.toDouble())
+    /**
+     * Increments the counter for the resolved label combination by one.
+     *
+     * Each element of [labelValues] is typically produced by calling a [LabelDef]
+     * as a function (its `invoke` operator), e.g. `hostname("play.example.com")`.
+     * Any label whose key is absent from [labelValues] falls back to its
+     * [LabelDef.default].
+     */
+    fun inc(vararg labelValues: Pair<String, String>): Counter = apply {
+        val provided = labelValues.toMap()
+        val labels: Labels = labelDefs.associate { it.key to (provided[it.key] ?: it.default) }
+        stores.computeIfAbsent(labels) { valueStoreFactory.create() }.add(1.0)
     }
 }

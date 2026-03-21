@@ -1,43 +1,30 @@
-![UnifiedMetrics](.github/assets/banner.png)
+# mcmetrics-exporter
 
-[![License](https://img.shields.io/github/license/Cubxity/UnifiedMetrics?style=flat-square)](COPYING.LESSER)
-[![Workflow Status](https://img.shields.io/github/workflow/status/Cubxity/UnifiedMetrics/gradle-preview-ci/master?style=flat-square)](https://github.com/Cubxity/UnifiedMetrics/actions)
-[![Maven Central](https://img.shields.io/maven-central/v/dev.cubxity.plugins/unifiedmetrics-api?color=green&style=flat-square)](https://search.maven.org/search?q=g:dev.cubxity.plugins%20a:unifiedmetrics-api)
-[![Discord](https://img.shields.io/badge/join-discord-blue?style=flat-square)](https://discord.gg/kDDhqJmPpA)
+Opinionated fork of [UnifiedMetrics](https://github.com/Cubxity/UnifiedMetrics) 
 
-UnifiedMetrics is a fully-featured free and open-source metrics collection plugin for Minecraft servers. This project is
-licensed under [GNU LGPLv3](COPYING.LESSER).
+UnifiedMetrics is a fully-featured free and open-source metrics collection plugin for Minecraft servers. 
+This project is effort to make it work with RustMe server, and makes some opinionated choices about what to use, expose and etc.
 
-[![Grafana Dashboard](.github/assets/grafana.png)](https://unifiedmetrics-demo.cubxity.dev)
-*Dashboard [included](https://docs.cubxity.dev/docs/unifiedmetrics/guides/grafana) out-of-box!*
-Click [here](https://unifiedmetrics-demo.cubxity.dev) for live preview!
+## Main differences from UnifiedMetrics
+- **Prometheus only** Prometheus is main way to work with metrics now, and project is easier to maintain.
+- **Expose common module along with API** You can now build your own platform module instead of waiting for in-tree support and it's recommended way to integrate (exceptions are Velocity, Bukkit and Sponge)
+- **Support for HTTP Service Discovery** Sends simple JSON to a server every other minute to make use of HTTP SD
+- **API updates** Allow to dynamically set labels, cardinality warning etc.
 
-## Features
-
-- **Platform-agnostic & compatible with popular platforms**. Get the same metrics and features on any supported
-  platform.
-- **Monitor your server in real-time** with Prometheus/InfluxDB and provided Grafana dashboards.
-- **High performance** metric collection. Low to none performance impact on the server's performance.
-- **Free and open-source**. The code is free and open for anyone to audit and contribute to.
 
 ## Compatibility
 
 **Server:**
 
-- 1.8+ Spigot servers *(includes Spigot-based forks)*
-- 1.16+ Fabric servers
-- Minestom
+- Spigot servers, Java 11, 1.16.5+ *(includes Spigot-based forks)*
 - Velocity
-- BungeeCord
 
-**Metrics:**
+**Other servers:**
+- TBA (Contributions are always welcome)
 
-- Prometheus
-- InfluxDB
+Don't see your server implementation? Pull `common` module from maven and implement it yourself, and make pull request to add it to the list!
 
 ## Getting started
-
-Read the [wiki](https://docs.cubxity.dev/docs/unifiedmetrics/intro) for instructions on how to get started.
 
 ## Metrics
 
@@ -52,25 +39,10 @@ Read the [wiki](https://docs.cubxity.dev/docs/unifiedmetrics/intro) for instruct
 | systemThread  | Current, daemon, started, and peak thread count | All              | true    |
 | events        | Login, join, quit, chat, and ping event counter | All              | true    |
 | server        | Plugins count and player counts                 | All              | true    |
-| tick          | Tick duration histogram                         | Bukkit, Minestom | true    |
-| world         | World entities, players, and chunks count       | Bukkit, Minestom | true    |
+| tick          | Tick duration histogram                         | Bukkit, Sponge   | true    |
+| world         | World entities, players, and chunks count       | Bukkit, Sponge   | true    |
 
 </details>
-
-## Special Thanks
-
-[Bloom Host](https://billing.bloom.host/aff.php?aff=9) has kindly provided UnifiedMetrics with development servers.
-Bloom has server splitting built-in, which makes it extremely easy to build your monitoring stack. Get high performance
-servers at Bloom by using [this link](https://billing.bloom.host/aff.php?aff=9).
-
-[![Bloom logo](https://bloom.host/banner.gif)](https://billing.bloom.host/aff.php?aff=9)
-
-YourKit supports open source projects with innovative and intelligent tools for monitoring and profiling Java and .NET
-applications. YourKit is the creator of [YourKit Java Profiler](https://www.yourkit.com/java/profiler/),
-[YourKit .NET Profiler](https://www.yourkit.com/.net/profiler/),
-and [YourKit YouMonitor](https://www.yourkit.com/youmonitor/).
-
-[![YourKit Logo](https://www.yourkit.com/images/yklogo.png)](https://www.yourkit.com/)
 
 ## Building from source
 
@@ -79,7 +51,7 @@ and [YourKit YouMonitor](https://www.yourkit.com/youmonitor/).
 
 **Requirements:**
 
-- JDK 8+ (16+ for Fabric, 17+ for Minestom)
+- JDK 8+
 - Git (Optional)
 
 To build UnifiedMetrics, you need to obtain the source code first. You can download the source from GitHub or use the
@@ -92,15 +64,13 @@ $ git clone https://github.com/Cubxity/UnifiedMetrics && cd UnifiedMetrics
 Open a terminal in the cloned directory and run the following command. The following command will build all subprojects.
 
 ```bash
-$ ./gradlew assemble -x signArchives
+$ ./gradlew assemble
 ```
-
-> `-x signArchives` is required to skip signing, unless you have signing set up
 
 To build a specific subproject, you can prefix it with the subproject path. For example:
 
 ```bash
-$ ./gradlew :unifiedmetrics-platform-bukkit:assemble -x signArchives
+$ ./gradlew :unifiedmetrics-platform-bukkit:assemble
 ```
 
 The output artifacts can be found in `subproject/build/libs`.
@@ -108,8 +78,6 @@ The output artifacts can be found in `subproject/build/libs`.
 
 ## API
 
-[![Maven Central](https://img.shields.io/maven-central/v/dev.cubxity.plugins/unifiedmetrics-api?color=green&style=flat-square)](https://search.maven.org/search?q=g:dev.cubxity.plugins%20a:unifiedmetrics-api)
-![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/dev.cubxity.plugins/unifiedmetrics-api?color=yellow&label=snapshots&server=https%3A%2F%2Fs01.oss.sonatype.org&style=flat-square)
 
 <details> 
   <summary>Instructions (click to show)</summary>

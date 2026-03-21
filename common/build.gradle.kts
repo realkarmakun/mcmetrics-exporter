@@ -15,9 +15,20 @@
  *     along with UnifiedMetrics.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-apply(plugin = "kotlinx-serialization")
+/*
+ *   Originally part of UnifiedMetrics.
+ *   Forked and modified by MeProject (2026) for mcmetrics-exporter.
+ *   Licensed under LGPL v3 or later.
+ */
+
+plugins {
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlinx.serialization)
+}
 
 dependencies {
-    api(project(":unifiedmetrics-api"))
+    api(project(":mcmetrics-exporter-api"))
     implementation("com.charleskorn.kaml:kaml:0.76.0")
+    api("io.prometheus:simpleclient_httpserver:0.16.0")
+    api("io.prometheus:simpleclient_pushgateway:0.16.0")
 }

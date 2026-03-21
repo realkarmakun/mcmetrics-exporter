@@ -15,6 +15,17 @@
  *     along with UnifiedMetrics.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/*
+ *   Originally part of UnifiedMetrics.
+ *   Forked and modified by MeProject (2026) for mcmetrics-exporter.
+ *   Licensed under LGPL v3 or later.
+ */
+
+plugins {
+    alias(libs.plugins.kotlin.jvm)
+    `maven-publish`
+}
+
 dependencies {
     api(platform(kotlin("bom")))
     api(kotlin("stdlib"))
@@ -42,8 +53,8 @@ publishing {
             }
 
             pom {
-                name.set("UnifiedMetrics")
-                description.set("UnifiedMetrics is a fully-featured free and open-source metrics collection plugin for Minecraft servers.")
+                name.set("mcmetrics-exporter")
+                description.set("mcmetrics-exporter is opinionated fork of UnifiedMetrics")
                 url.set("https://github.com/Cubxity/UnifiedMetrics/")
 
                 licenses {
@@ -54,21 +65,12 @@ publishing {
                 }
                 developers {
                     developer {
-                        id.set("cubxity")
-                        name.set("Cubxity")
-                        email.set("contact@cubxity.dev")
+                        id.set("rkkm")
+                        name.set("rkkm")
+                        email.set("p.konstantinov@meproject.ru")
                     }
-                }
-                scm {
-                    connection.set("scm:git:git://github.com/Cubxity/UnifiedMetrics.git")
-                    developerConnection.set("scm:git:ssh://github.com/Cubxity/UnifiedMetrics.git")
-                    url.set("https://github.com/Cubxity/UnifiedMetrics/")
                 }
             }
         }
     }
-}
-
-signing {
-    sign(publishing.publications["mavenJava"])
 }

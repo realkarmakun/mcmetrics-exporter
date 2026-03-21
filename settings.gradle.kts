@@ -15,46 +15,34 @@
  *     along with UnifiedMetrics.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-rootProject.name = "UnifiedMetrics"
+/*
+ *   Originally part of UnifiedMetrics.
+ *   Forked and modified by MeProject (2026) for mcmetrics-exporter.
+ *   Licensed under LGPL v3 or later.
+ */
 
-val modulePrefix = ":unifiedmetrics-"
-val platformPrefix = "platform-"
-val driverPrefix = "driver-"
+rootProject.name = "mcmetrics-exporter"
+
+val modulePrefix = ":mcmetrics-exporter-"
 
 include(modulePrefix + "api")
 include(modulePrefix + "common")
-include(modulePrefix + "core")
 
-include(modulePrefix + platformPrefix + "bukkit")
-//include(modulePrefix + platformPrefix + "minestom")
-include(modulePrefix + platformPrefix + "velocity")
-include(modulePrefix + platformPrefix + "bungee")
-include(modulePrefix + platformPrefix + "fabric")
-
-include(modulePrefix + driverPrefix + "influx")
-include(modulePrefix + driverPrefix + "prometheus")
+include(modulePrefix + "bukkit")
+include(modulePrefix + "velocity")
 
 project(modulePrefix + "api").projectDir = File(rootDir, "api")
 project(modulePrefix + "common").projectDir = File(rootDir, "common")
-project(modulePrefix + "core").projectDir = File(rootDir, "core")
 
-val platformsDir = File(rootDir, "platforms")
-project(modulePrefix + platformPrefix + "bukkit").projectDir = File(platformsDir, "bukkit")
-//project(modulePrefix + platformPrefix + "minestom").projectDir = File(platformsDir, "minestom")
-project(modulePrefix + platformPrefix + "velocity").projectDir = File(platformsDir, "velocity")
-project(modulePrefix + platformPrefix + "bungee").projectDir = File(platformsDir, "bungee")
-project(modulePrefix + platformPrefix + "fabric").projectDir = File(platformsDir, "fabric")
-
-val driversDir = File(rootDir, "drivers")
-project(modulePrefix + driverPrefix + "influx").projectDir = File(driversDir, "influx")
-project(modulePrefix + driverPrefix + "prometheus").projectDir = File(driversDir, "prometheus")
+project(modulePrefix + "bukkit").projectDir = File(rootDir, "bukkit")
+project(modulePrefix + "velocity").projectDir = File(rootDir, "velocity")
 
 pluginManagement {
     repositories {
         gradlePluginPortal()
-        maven {
-            name = "Fabric"
-            url = uri("https://maven.fabricmc.net/")
-        }
     }
+}
+
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }

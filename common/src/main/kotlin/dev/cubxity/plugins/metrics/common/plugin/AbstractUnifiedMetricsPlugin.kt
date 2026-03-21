@@ -60,7 +60,6 @@ abstract class AbstractUnifiedMetricsPlugin : UnifiedMetricsPlugin {
         registerPlatformService(apiProvider)
 
         if (config.metrics.enabled) {
-            registerMetricsDrivers()
             registerPlatformMetrics()
             apiProvider.metricsManager.initialize()
         }
@@ -76,10 +75,6 @@ abstract class AbstractUnifiedMetricsPlugin : UnifiedMetricsPlugin {
     }
 
     abstract fun registerPlatformService(api: UnifiedMetrics)
-
-    open fun registerMetricsDrivers() {
-
-    }
 
     open fun registerPlatformMetrics() {
         apiProvider.metricsManager.apply {
