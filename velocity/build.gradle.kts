@@ -44,13 +44,7 @@ tasks {
         relocate("com.charleskorn", "dev.cubxity.plugins.metrics.libs.com.charleskorn")
         relocate("io.prometheus", "dev.cubxity.plugins.metrics.libs.io.prometheus")
     }
-    processResources {
-        filesMatching("velocity-plugin.yml") {
-            expand(
-                "version" to project.version
-            )
-        }
-    }
+
 }
 
 kotlin {

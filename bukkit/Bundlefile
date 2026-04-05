@@ -1,0 +1,3 @@
+FROM scratch
+
+ADD build/libs/mcmetrics-exporter-bukkit-*.jar plugins/mcmetrics-exporter-bukkit.jar

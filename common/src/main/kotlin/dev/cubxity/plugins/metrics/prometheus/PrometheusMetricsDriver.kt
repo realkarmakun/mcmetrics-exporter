@@ -18,20 +18,21 @@
 package dev.cubxity.plugins.metrics.prometheus
 
 import dev.cubxity.plugins.metrics.api.UnifiedMetrics
-import dev.cubxity.plugins.metrics.api.metric.MetricsDriver
+import java.io.Closeable
+
 import dev.cubxity.plugins.metrics.prometheus.config.PrometheusConfig
 import dev.cubxity.plugins.metrics.prometheus.config.PrometheusMode
 import dev.cubxity.plugins.metrics.prometheus.exporter.PrometheusExporter
 import dev.cubxity.plugins.metrics.prometheus.exporter.PrometheusHTTPExporter
 import dev.cubxity.plugins.metrics.prometheus.exporter.PushGatewayExporter
 
-class PrometheusMetricsDriver(api: UnifiedMetrics, val config: PrometheusConfig) : MetricsDriver {
-    private val exporter: PrometheusExporter =  when (config.mode) {
+class PrometheusMetricsDriver(api: UnifiedMetrics, val config: PrometheusConfig) : Closeable {
+    private val exporter: PrometheusExporter = when (config.mode) {
         PrometheusMode.Http -> PrometheusHTTPExporter(api, this)
         PrometheusMode.PushGateway -> PushGatewayExporter(api, this)
     }
 
-    override fun initialize() {
+    fun initialize() {
         exporter.initialize()
     }
 

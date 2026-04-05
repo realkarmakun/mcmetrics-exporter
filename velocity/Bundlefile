@@ -1,0 +1,3 @@
+FROM scratch
+
+ADD build/libs/mcmetrics-exporter-velocity-*.jar plugins/mcmetrics-exporter-velocity.jar
