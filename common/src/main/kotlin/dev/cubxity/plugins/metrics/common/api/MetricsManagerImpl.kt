@@ -28,6 +28,8 @@ import dev.cubxity.plugins.metrics.common.plugin.UnifiedMetricsPlugin
 import dev.cubxity.plugins.metrics.common.plugin.dispatcher.CurrentThreadDispatcher
 import dev.cubxity.plugins.metrics.prometheus.PrometheusMetricsDriver
 import dev.cubxity.plugins.metrics.prometheus.config.PrometheusConfig
+import dev.cubxity.plugins.metrics.prometheus.discovery.DiscoveryTask
+import dev.cubxity.plugins.metrics.prometheus.discovery.HttpDiscovery
 import kotlinx.coroutines.withContext
 import kotlin.system.measureTimeMillis
 
@@ -37,6 +39,10 @@ class MetricsManagerImpl(private val plugin: UnifiedMetricsPlugin) : MetricsMana
     private val _collections: MutableList<CollectorCollection> = ArrayList()
 
     private var driver: PrometheusMetricsDriver? = null
+    private var _discoveryTask: DiscoveryTask? = null
+
+    val discoveryTask: DiscoveryTask?
+        get() = _discoveryTask
 
     override val collections: List<CollectorCollection>
         get() = _collections
@@ -64,6 +70,8 @@ class MetricsManagerImpl(private val plugin: UnifiedMetricsPlugin) : MetricsMana
                 val driver = PrometheusMetricsDriver(plugin.apiProvider, config)
                 driver.initialize()
                 this.driver = driver
+
+                _discoveryTask = HttpDiscovery.Factory.create(plugin.apiProvider, config.discovery)
             } catch (error: Throwable) {
                 plugin.apiProvider.logger.severe("An error occurred whilst initializing Prometheus metrics", error)
             }
@@ -121,5 +129,6 @@ class MetricsManagerImpl(private val plugin: UnifiedMetricsPlugin) : MetricsMana
 
         driver?.close()
         driver = null
+        _discoveryTask = null
     }
 }

@@ -28,10 +28,22 @@ import dev.cubxity.plugins.metrics.common.plugin.AbstractUnifiedMetricsPlugin
 import dev.cubxity.plugins.metrics.velocity.bootstrap.McmetricsExporterVelocityBootstrap
 import dev.cubxity.plugins.metrics.velocity.metric.events.EventsCollection
 import dev.cubxity.plugins.metrics.velocity.metric.server.ServerCollection
+import java.time.Duration as JavaDuration
 
 class McmetricsExporterVelocityPlugin(
     override val bootstrap: McmetricsExporterVelocityBootstrap
 ) : AbstractUnifiedMetricsPlugin() {
+    override fun enable() {
+        super.enable()
+        discoveryTask?.let { discovery ->
+            bootstrap.server.scheduler
+                .buildTask(bootstrap, Runnable { discovery.task() })
+                .delay(JavaDuration.ZERO)
+                .repeat(JavaDuration.ofSeconds(discovery.interval.inWholeSeconds))
+                .schedule()
+        }
+    }
+
     override fun registerPlatformService(api: UnifiedMetrics) {
         // Velocity doesn't have a service manager
     }

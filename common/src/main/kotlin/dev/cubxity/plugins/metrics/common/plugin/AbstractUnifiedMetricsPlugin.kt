@@ -21,8 +21,10 @@ import com.charleskorn.kaml.Yaml
 import com.charleskorn.kaml.YamlConfiguration
 import dev.cubxity.plugins.metrics.api.UnifiedMetrics
 import dev.cubxity.plugins.metrics.api.UnifiedMetricsProvider
+import dev.cubxity.plugins.metrics.common.api.MetricsManagerImpl
 import dev.cubxity.plugins.metrics.common.api.UnifiedMetricsApiProvider
 import dev.cubxity.plugins.metrics.common.config.UnifiedMetricsConfig
+import dev.cubxity.plugins.metrics.prometheus.discovery.DiscoveryTask
 import dev.cubxity.plugins.metrics.common.metric.system.gc.GCCollection
 import dev.cubxity.plugins.metrics.common.metric.system.memory.MemoryCollection
 import dev.cubxity.plugins.metrics.common.metric.system.process.ProcessCollection
@@ -75,6 +77,13 @@ abstract class AbstractUnifiedMetricsPlugin : UnifiedMetricsPlugin {
     }
 
     abstract fun registerPlatformService(api: UnifiedMetrics)
+
+    /**
+     * The discovery task created by [HttpDiscovery.Factory], or `null` if discovery is
+     * disabled in config. Platforms should schedule this after [enable] returns.
+     */
+    protected val discoveryTask: DiscoveryTask?
+        get() = (apiProvider.metricsManager as? MetricsManagerImpl)?.discoveryTask
 
     open fun registerPlatformMetrics() {
         apiProvider.metricsManager.apply {

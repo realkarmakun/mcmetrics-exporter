@@ -31,4 +31,5 @@ dependencies {
     implementation("com.charleskorn.kaml:kaml:0.76.0")
     api("io.prometheus:simpleclient_httpserver:0.16.0")
     api("io.prometheus:simpleclient_pushgateway:0.16.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 }
