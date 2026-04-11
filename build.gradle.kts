@@ -31,7 +31,7 @@ plugins {
 allprojects {
     group = "io.github.rkkm.mcmetrics-exporter"
     description = "Fully featured metrics collector agent for Minecraft servers."
-    version = "0.5.0-SNAPSHOT"
+    version = "0.5.0-rc2"
 
     repositories {
         mavenCentral()
