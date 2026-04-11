@@ -24,6 +24,7 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlinx.serialization)
+    `maven-publish`
 }
 
 dependencies {
@@ -32,4 +33,27 @@ dependencies {
     api("io.prometheus:simpleclient_httpserver:0.16.0")
     api("io.prometheus:simpleclient_pushgateway:0.16.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/realkarmakun/mcmetrics-exporter")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+        }
+    }
 }

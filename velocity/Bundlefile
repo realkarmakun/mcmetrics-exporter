@@ -1,3 +1,17 @@
 FROM scratch
 
-COPY build/libs/mcmetrics-exporter-velocity-*.jar plugins/mcmetrics-exporter-velocity.jar
+ARG BUILD_DATE
+ARG GIT_REVISION
+ARG VERSION
+ARG DESCRIPTION
+
+COPY build/libs/mcmetrics-exporter-velocity-*.jar plugins/
+
+LABEL org.opencontainers.image.created=${BUILD_DATE}
+LABEL org.opencontainers.image.revision=${GIT_REVISION}
+LABEL org.opencontainers.image.version=${VERSION}
+LABEL org.opencontainers.image.vendor="realkarmakun"
+LABEL org.opencontainers.image.authors="Cubixity, UnifiedMetrics contributors, mcmemtics-exporter contributors"
+LABEL org.opencontainers.image.source=https://github.com/realkarmakun/mcmetrics-exporter
+LABEL org.opencontainers.image.description=${DESCRIPTION}
+LABEL org.opencontainers.image.licenses=LGPL-3.0-only
