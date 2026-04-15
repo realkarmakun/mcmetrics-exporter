@@ -10,7 +10,7 @@ ADD build/libs/mcmetrics-exporter-bukkit-${VERSION}.jar plugins/mcmetrics-export
 LABEL org.opencontainers.image.created=${BUILD_DATE}
 LABEL org.opencontainers.image.revision=${GIT_REVISION}
 LABEL org.opencontainers.image.version=${VERSION}
-LABEL org.opencontainers.image.vendor="realkarmakun"
+LABEL org.opencontainers.image.vendor="rkkm"
 LABEL org.opencontainers.image.authors="Cubixity, UnifiedMetrics contributors, mcmetrics-exporter contributors"
 LABEL org.opencontainers.image.source=https://github.com/realkarmakun/mcmetrics-exporter
 LABEL org.opencontainers.image.description=${DESCRIPTION}
