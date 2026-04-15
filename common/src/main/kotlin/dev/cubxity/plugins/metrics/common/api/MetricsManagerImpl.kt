@@ -17,8 +17,6 @@
 
 package dev.cubxity.plugins.metrics.common.api
 
-import com.charleskorn.kaml.Yaml
-import com.charleskorn.kaml.YamlConfiguration
 import dev.cubxity.plugins.metrics.api.metric.MetricsManager
 import dev.cubxity.plugins.metrics.api.metric.collector.CollectorCollection
 import dev.cubxity.plugins.metrics.api.metric.collector.collect
@@ -27,15 +25,12 @@ import dev.cubxity.plugins.metrics.api.util.fastForEach
 import dev.cubxity.plugins.metrics.common.plugin.UnifiedMetricsPlugin
 import dev.cubxity.plugins.metrics.common.plugin.dispatcher.CurrentThreadDispatcher
 import dev.cubxity.plugins.metrics.prometheus.PrometheusMetricsDriver
-import dev.cubxity.plugins.metrics.prometheus.config.PrometheusConfig
 import dev.cubxity.plugins.metrics.prometheus.discovery.DiscoveryTask
 import dev.cubxity.plugins.metrics.prometheus.discovery.HttpDiscovery
 import kotlinx.coroutines.withContext
 import kotlin.system.measureTimeMillis
 
 class MetricsManagerImpl(private val plugin: UnifiedMetricsPlugin) : MetricsManager {
-    private val yaml = Yaml(configuration = YamlConfiguration(strictMode = false))
-
     private val _collections: MutableList<CollectorCollection> = ArrayList()
 
     private var driver: PrometheusMetricsDriver? = null
@@ -51,21 +46,7 @@ class MetricsManagerImpl(private val plugin: UnifiedMetricsPlugin) : MetricsMana
         plugin.bootstrap.logger.info("Initializing Prometheus metrics.")
         val time = measureTimeMillis {
             try {
-                val file = plugin.bootstrap.configDirectory.toFile().resolve("prometheus.yml")
-
-                val config = when {
-                    file.exists() -> yaml.decodeFromString(PrometheusConfig.serializer(), file.readText())
-                    else -> PrometheusConfig()
-                }
-
-                try {
-                    file.writeText(yaml.encodeToString(PrometheusConfig.serializer(), config))
-                } catch (exception: Exception) {
-                    plugin.apiProvider.logger.severe(
-                        "An error occurred whilst saving prometheus config file",
-                        exception
-                    )
-                }
+                val config = plugin.config.metrics.prometheus
 
                 val driver = PrometheusMetricsDriver(plugin.apiProvider, config)
                 driver.initialize()

@@ -17,6 +17,7 @@
 
 package dev.cubxity.plugins.metrics.common.config
 
+import dev.cubxity.plugins.metrics.prometheus.config.PrometheusConfig
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -32,20 +33,7 @@ data class UnifiedMetricsServerConfig(
 
 @Serializable
 data class UnifiedMetricsMetricsConfig(
-    val enabled: Boolean = true,
-    val collectors: UnifiedMetricsCollectorsConfig = UnifiedMetricsCollectorsConfig()
-)
-
-@Serializable
-data class UnifiedMetricsCollectorsConfig(
-    val systemGc: Boolean = true,
-    val systemMemory: Boolean = true,
-    val systemProcess: Boolean = true,
-    val systemThread: Boolean = true,
-    val server: Boolean = true,
-    val world: Boolean = true,
-    val tick: Boolean = true,
-    val events: Boolean = true
+    val prometheus: PrometheusConfig = PrometheusConfig()
 )
 
 private fun env(name: String, default: String): String =

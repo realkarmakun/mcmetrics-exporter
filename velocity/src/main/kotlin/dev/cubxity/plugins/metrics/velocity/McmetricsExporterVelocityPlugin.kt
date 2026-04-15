@@ -52,10 +52,8 @@ class McmetricsExporterVelocityPlugin(
         super.registerPlatformMetrics()
 
         apiProvider.metricsManager.apply {
-            with(config.metrics.collectors) {
-                if (server) registerCollection(ServerCollection(bootstrap))
-                if (events) registerCollection(EventsCollection(bootstrap))
-            }
+            registerCollection(ServerCollection(bootstrap))
+            registerCollection(EventsCollection(bootstrap))
         }
     }
 }

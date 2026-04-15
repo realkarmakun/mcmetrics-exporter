@@ -60,12 +60,10 @@ class McmetricsExporterBukkitPlugin(
         super.registerPlatformMetrics()
 
         apiProvider.metricsManager.apply {
-            with(config.metrics.collectors) {
-                if (server) registerCollection(ServerCollection(bootstrap))
-                if (world) registerCollection(WorldCollection(bootstrap))
-                if (tick) registerCollection(TickCollection(bootstrap))
-                if (events) registerCollection(EventsCollection(bootstrap))
-            }
+            registerCollection(ServerCollection(bootstrap))
+            registerCollection(WorldCollection(bootstrap))
+            registerCollection(TickCollection(bootstrap))
+            registerCollection(EventsCollection(bootstrap))
         }
     }
 }

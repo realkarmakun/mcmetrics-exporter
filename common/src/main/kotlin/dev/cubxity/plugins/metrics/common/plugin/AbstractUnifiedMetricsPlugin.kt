@@ -61,17 +61,12 @@ abstract class AbstractUnifiedMetricsPlugin : UnifiedMetricsPlugin {
         UnifiedMetricsProvider.register(apiProvider)
         registerPlatformService(apiProvider)
 
-        if (config.metrics.enabled) {
-            registerPlatformMetrics()
-            apiProvider.metricsManager.initialize()
-        }
+        registerPlatformMetrics()
+        apiProvider.metricsManager.initialize()
     }
 
     open fun disable() {
-        if (config.metrics.enabled) {
-            apiProvider.metricsManager.dispose()
-        }
-
+        apiProvider.metricsManager.dispose()
         UnifiedMetricsProvider.unregister()
         _apiProvider = null
     }
@@ -87,12 +82,10 @@ abstract class AbstractUnifiedMetricsPlugin : UnifiedMetricsPlugin {
 
     open fun registerPlatformMetrics() {
         apiProvider.metricsManager.apply {
-            with(config.metrics.collectors) {
-                if (systemGc) registerCollection(GCCollection())
-                if (systemMemory) registerCollection(MemoryCollection())
-                if (systemProcess) registerCollection(ProcessCollection())
-                if (systemThread) registerCollection(ThreadCollection())
-            }
+            registerCollection(GCCollection())
+            registerCollection(MemoryCollection())
+            registerCollection(ProcessCollection())
+            registerCollection(ThreadCollection())
         }
     }
 
