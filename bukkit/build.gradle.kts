@@ -34,8 +34,6 @@ tasks {
         archiveClassifier.set("")
         relocate("com.charleskorn", "ru.meproject.mcmetrics-exporter.metrics.libs.com.charleskorn")
         relocate("io.prometheus", "ru.meproject.mcmetrics-exporter.metrics.libs.io.prometheus")
-        relocate("okhttp3", "ru.meproject.mcmetrics-exporter.plugins.metrics.libs.okhttp3")
-        relocate("okio", "ru.meproject.mcmetrics-exporter.plugins.metrics.libs.okio")
 
         manifest {
             attributes(mapOf("paperweight-mappings-namespace" to "mojang"))

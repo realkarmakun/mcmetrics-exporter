@@ -24,8 +24,7 @@ import kotlinx.serialization.Serializable
 data class PrometheusConfig(
     val mode: PrometheusMode = PrometheusMode.Http,
     val http: PrometheusHttpConfig = PrometheusHttpConfig(),
-    val pushGateway: PushGatewayConfig = PushGatewayConfig(),
-    val discovery: DiscoveryConfig = DiscoveryConfig()
+    val pushGateway: PushGatewayConfig = PushGatewayConfig()
 )
 
 @Serializable
@@ -66,15 +65,4 @@ data class AuthenticationConfig(
     val scheme: AuthenticationScheme = AuthenticationScheme.None,
     val username: String = "username",
     val password: String = "password"
-)
-
-@Serializable
-data class DiscoveryConfig(
-    val enabled: Boolean = false,
-    val url: String = "http://localhost:9999/",
-    val host: String = "localhost",
-    val port: Int = 9100,
-    val job: String = "mcmetrics-exporter",
-    val intervalSeconds: Long = 300,
-    val labels: Map<String, String> = emptyMap()
 )

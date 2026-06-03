@@ -31,7 +31,7 @@ plugins {
 allprojects {
     group = "ru.meproject.mcmetrics-exporter"
     description = "Fully featured metrics collector agent for Minecraft servers."
-    version = "0.5.0-rc3"
+    version = "0.5.0-rc4"
 
     repositories {
         mavenCentral()

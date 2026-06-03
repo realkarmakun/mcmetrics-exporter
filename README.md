@@ -8,7 +8,6 @@ This project is effort to make it work with RustMe server, and makes some opinio
 ## Main differences from UnifiedMetrics
 - **Prometheus only** Prometheus is main way to work with metrics now, and project is easier to maintain.
 - **Expose common module along with API** You can now build your own platform module instead of waiting for in-tree support and it's recommended way to integrate (exceptions are Velocity, Bukkit and Sponge)
-- **Support for HTTP Service Discovery** Sends simple JSON to a server every other minute to make use of HTTP SD
 - **API updates** Allow to dynamically set labels, cardinality warning etc.
 
 

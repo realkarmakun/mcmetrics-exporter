@@ -31,27 +31,10 @@ import dev.cubxity.plugins.metrics.bukkit.metric.tick.TickCollection
 import dev.cubxity.plugins.metrics.bukkit.metric.world.WorldCollection
 import dev.cubxity.plugins.metrics.common.plugin.AbstractUnifiedMetricsPlugin
 import org.bukkit.plugin.ServicePriority
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.ScheduledFuture
 
 class McmetricsExporterBukkitPlugin(
     override val bootstrap: UnifiedMetricsBukkitBootstrap
 ) : AbstractUnifiedMetricsPlugin() {
-    private val executor = Executors.newScheduledThreadPool(1)
-
-    override fun enable() {
-        super.enable()
-        discoveryTask?.let { discovery ->
-            executor.scheduleAtFixedRate(discovery.task, 0L, discovery.interval.inWholeSeconds, TimeUnit.SECONDS)
-        }
-    }
-
-    override fun disable() {
-        executor.shutdownNow()
-        super.disable()
-    }
-
     override fun registerPlatformService(api: UnifiedMetrics) {
         bootstrap.server.servicesManager.register(UnifiedMetrics::class.java, api, bootstrap, ServicePriority.Normal)
     }
