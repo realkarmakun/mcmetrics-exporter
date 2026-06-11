@@ -38,6 +38,7 @@ import dev.cubxity.plugins.metrics.common.plugin.dispatcher.CurrentThreadDispatc
 import dev.cubxity.plugins.metrics.velocity.McmetricsExporterVelocityPlugin
 import dev.cubxity.plugins.metrics.velocity.logger.Slf4jLogger
 import kotlinx.coroutines.CoroutineDispatcher
+import java.net.http.HttpClient
 import java.nio.file.Path
 import kotlin.jvm.optionals.getOrDefault
 
@@ -45,6 +46,7 @@ import kotlin.jvm.optionals.getOrDefault
     id = "mcmetrics-exporter",
     name = "mcmetrics-exporter",
     description = "fork of UnifiedMetrics",
+    version = "5.0.0",
     authors = ["Cubxity", "rkkm"]
 )
 class McmetricsExporterVelocityBootstrap @Inject constructor(

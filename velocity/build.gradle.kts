@@ -34,8 +34,8 @@ repositories {
 dependencies {
     api(project(":mcmetrics-exporter-common"))
 
-    compileOnly("com.velocitypowered:velocity-api:3.5.0-SNAPSHOT")
-    kapt("com.velocitypowered:velocity-api:3.5.0-SNAPSHOT")
+    compileOnly("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT")
+    kapt("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT")
 }
 
 tasks {
@@ -48,5 +48,5 @@ tasks {
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(17)
 }
