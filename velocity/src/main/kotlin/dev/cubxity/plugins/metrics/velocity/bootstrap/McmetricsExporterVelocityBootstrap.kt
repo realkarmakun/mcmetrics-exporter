@@ -46,7 +46,7 @@ import kotlin.jvm.optionals.getOrDefault
     id = "mcmetrics-exporter",
     name = "mcmetrics-exporter",
     description = "fork of UnifiedMetrics",
-    version = "5.0.0",
+    version = "0.5.0",
     authors = ["Cubxity", "rkkm"]
 )
 class McmetricsExporterVelocityBootstrap @Inject constructor(
